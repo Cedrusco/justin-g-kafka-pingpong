@@ -1,24 +1,26 @@
 package com.cedrus.justin_taylor.kafkademo.Services;
 
-import com.cedrus.justin_taylor.kafkademo.Services.PingServices.PingService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Properties;
 
+@Slf4j
+@Service
 public class ConsumerService {
-    static Properties consumerConfig;
-    static String isPingOrPong ;
-    static String trigger;
-    private PingService pingService;
+    private Properties consumerConfig;
+    private String isPingOrPong ;
+    private String trigger;
 
-    ConsumerService() {
-
+    @Autowired
+    ConsumerService(Properties consumerConfig) {
+        this.consumerConfig = consumerConfig;
     }
 
     public final void start(String pingOrPong) {
@@ -31,7 +33,7 @@ public class ConsumerService {
         consumerConfig.put("group.id", pingOrPong+"Group1");
         trigger = pingOrPong == "ping" ? "Pong!" : "Ping!";
 
-        final KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(consumerConfig);
+        final KafkaConsumer consumer = new KafkaConsumer(consumerConfig);
         ArrayList<String> topics = new ArrayList<>();
         topics.add(isPingOrPong == "ping" ? "pong" : "ping");
         Duration pollInterval = Duration.ofMillis(1000);
@@ -41,10 +43,7 @@ public class ConsumerService {
             while(true) {
                 ConsumerRecords<String, String> records = consumer.poll(pollInterval);
                 for(ConsumerRecord<String, String> record : records) {
-                    if(record.value().toLowerCase() == trigger) {
-                        wait(500);
-                        pingService.sendPingMessage();
-                    }
+                        log.info(record.value());
                 }
             }
         } catch (Exception ex) {

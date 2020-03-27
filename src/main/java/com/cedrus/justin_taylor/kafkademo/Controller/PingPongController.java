@@ -18,8 +18,9 @@ public class PingPongController {
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
     @ResponseBody
-    public void sendPing() {
+    public String sendPing() {
         producer.sendMessage("Ping!");
+        return "Ping!";
     }
 
     @RequestMapping(value = "/pong", method = RequestMethod.POST)
