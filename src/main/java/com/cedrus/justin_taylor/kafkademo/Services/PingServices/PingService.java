@@ -1,6 +1,7 @@
 package com.cedrus.justin_taylor.kafkademo.Services.PingServices;
 import com.cedrus.justin_taylor.kafkademo.Services.ConsumerService;
 import com.cedrus.justin_taylor.kafkademo.Services.ProducerService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PingService {
     private ConsumerService pingConsumer;
@@ -8,6 +9,7 @@ public class PingService {
 
     PingService() {}
 
+    @Autowired
     public PingService(ConsumerService pingConsumer, ProducerService pingProducer) {
         this.pingConsumer = pingConsumer;
         this.pingProducer = pingProducer;
@@ -18,6 +20,6 @@ public class PingService {
     }
 
     public void sendPingMessage() {
-        pingProducer.sendMessage();
+        pingProducer.sendMessage("Ping!");
     }
 }

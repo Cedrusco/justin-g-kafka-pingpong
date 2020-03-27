@@ -4,6 +4,7 @@ import com.cedrus.justin_taylor.kafkademo.Services.PingServices.PingService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
@@ -14,9 +15,11 @@ public class ConsumerService {
     static Properties consumerConfig;
     static String isPingOrPong ;
     static String trigger;
-
-    @Autowired
     private PingService pingService;
+
+    ConsumerService() {
+
+    }
 
     public final void start(String pingOrPong) {
 
@@ -30,7 +33,7 @@ public class ConsumerService {
 
         final KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(consumerConfig);
         ArrayList<String> topics = new ArrayList<>();
-        topics.add(isPingOrPong);
+        topics.add(isPingOrPong == "ping" ? "pong" : "ping");
         Duration pollInterval = Duration.ofMillis(1000);
         consumer.subscribe(topics);
 
