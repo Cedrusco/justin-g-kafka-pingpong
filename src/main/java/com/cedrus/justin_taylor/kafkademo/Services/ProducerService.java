@@ -1,11 +1,15 @@
 package com.cedrus.justin_taylor.kafkademo.Services;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
 
+@Slf4j
+@Component
 @Service
 public class ProducerService {
 	private Properties producerProps = new Properties();
@@ -19,13 +23,12 @@ public class ProducerService {
 		this.producer = new KafkaProducer<String, String>(producerProps);
 	}
 
-	public void sendMessage(String pingOrPong) {
-		String message = pingOrPong.replace("p", "P");
+	public void sendMessage(String topic, String message) {
 		try {
-			producer.send(new ProducerRecord<String, String>("pong", pingOrPong, message + "!"));
-			System.out.println("Sending: "+pingOrPong);
+			producer.send(new ProducerRecord<String, String>(topic, message + "!"));
+			log.info("Sent message: "+message);
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			log.info(ex.getMessage());
 			producer.close();
 		}
 	}
