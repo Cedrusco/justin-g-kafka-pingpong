@@ -25,8 +25,7 @@ public class ProducerService {
 
 	public void sendMessage(String topic, String message) {
 		try {
-			producer.send(new ProducerRecord<String, String>(topic, message + "!"));
-			log.info("Sent message: "+message);
+			producer.send(new ProducerRecord<String, String>(topic, message));
 		} catch (Exception ex) {
 			log.info(ex.getMessage());
 			producer.close();
