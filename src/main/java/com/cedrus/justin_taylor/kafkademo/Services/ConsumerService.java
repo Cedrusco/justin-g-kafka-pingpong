@@ -38,10 +38,9 @@ public class ConsumerService {
                     String outgoingTopicAndMessage = incomingMessage.contentEquals("ping!") ? "pong" : "ping";
                     log.info("Sending: " + outgoingTopicAndMessage);
                     if (incomingMessage.contentEquals("ping!")) {
-                        log.info("Hit Pong! Get Ready!");
                         producer.sendMessage(outgoingTopicAndMessage, outgoingTopicAndMessage);
                     } else if (incomingMessage.contentEquals("pong!")) {
-                        log.info("Hit Ping! Get Ready!");
+                        log.info("Ping misses the ball!! Game over.");
                     }
                 }
             }

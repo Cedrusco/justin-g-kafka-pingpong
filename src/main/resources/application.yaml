@@ -1,0 +1,11 @@
+kafka:
+  bootstrap-servers: localhost:9092
+  kafkaAppId: "ping-pong"
+  groupId: "ping-pong"
+  autoOffsetReset: "latest"
+  topics:
+    ping: "ping"
+    pong: "pong"
+  messages:
+    ping: "Ping Player hits the ball!!"
+    pong: "Pong Player hits the ball!!"
