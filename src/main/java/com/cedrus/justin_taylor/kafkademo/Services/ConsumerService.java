@@ -14,8 +14,6 @@ import java.util.Properties;
 @Service
 public class ConsumerService {
     private Properties consumerConfig;
-//    private String isPingOrPong;
-
 
     public final void start(ProducerService producer) {
         consumerConfig = new Properties();
@@ -32,19 +30,18 @@ public class ConsumerService {
         Duration pollInterval = Duration.ofMillis(5000);
         consumer.subscribe(topics);
         try {
-            while(true) {
+            while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(pollInterval);
-                for(ConsumerRecord<String, String> record : records) {
+                for (ConsumerRecord<String, String> record : records) {
                     String incomingMessage = record.value();
-                    log.info("Received: "+incomingMessage);
-                    log.info("incoming: "+incomingMessage);
+                    log.info("Received: " + incomingMessage);
                     String outgoingTopicAndMessage = incomingMessage.contentEquals("ping!") ? "pong" : "ping";
-                    log.info("outgoing: "+outgoingTopicAndMessage);
-                    log.info("Sending: "+outgoingTopicAndMessage);
-                    if(incomingMessage.contentEquals( "ping!")) {
-                        log.info("Hit Ping!");
-                    } else {
+                    log.info("Sending: " + outgoingTopicAndMessage);
+                    if (incomingMessage.contentEquals("ping!")) {
+                        log.info("Hit Pong! Get Ready!");
                         producer.sendMessage(outgoingTopicAndMessage, outgoingTopicAndMessage);
+                    } else if (incomingMessage.contentEquals("pong!")) {
+                        log.info("Hit Ping! Get Ready!");
                     }
                 }
             }

@@ -1,4 +1,5 @@
 package com.cedrus.justin_taylor.kafkademo;
+
 import com.cedrus.justin_taylor.kafkademo.Services.ConsumerService;
 import com.cedrus.justin_taylor.kafkademo.Services.ProducerService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,8 @@ import org.springframework.context.annotation.Bean;
 public class KafkaPingPong {
 
     public static final Marker FATAL_MARKER = MarkerFactory.getMarker("FATAL");
-    public ConsumerService consumerService;
     @Autowired
     public ProducerService producerService;
-
 
     public static void main(String[] args) {
 
@@ -27,7 +26,7 @@ public class KafkaPingPong {
     }
 
     @Bean
-    public CommandLineRunner GameRunner (ApplicationContext ctx) {
+    public CommandLineRunner GameRunner(ApplicationContext ctx) {
         try {
             return args -> {
                 ((ConsumerService) ctx.getBean("consumerService")).start(producerService);
@@ -42,22 +41,5 @@ public class KafkaPingPong {
             throw rex;
         }
     }
-    }
+}
 
-//    @Bean // Bean is a way of making a method visible to Spring, so it knows to call it.
-//    public CommandLineRunner GameRunner(ApplicationContext ctx) {
-//        try {
-//            return args -> {
-//                ((class) ctx.getBean("pingPongGame"))
-//
-//            };
-//        } catch (RuntimeException rex) {
-//            log.error(
-//                    FATAL_MARKER,
-//                    "RuntimeException encountered when trying to start the service using CommandLineRunner message={}",
-//                    rex.getMessage());
-//            log.error("RuntimeException", rex);
-//            throw rex;
-//        }
-//    }
-//}
