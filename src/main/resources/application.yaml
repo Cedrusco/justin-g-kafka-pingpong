@@ -1,0 +1,19 @@
+kafka:
+  common:
+    bootstrapServers: localhost:9092
+    kafkaAppId: "ping-pong"
+    groupId: "ping-pong-group-1"
+    serializer: "org.apache.kafka.common.serialization.StringSerializer"
+    deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+    offsetReset: "latest"
+  topics:
+    playerOneTopic: "ping"
+    playerTwoTopic: "pong"
+  messages:
+    playerOneLogMessage: "Mr. Ping returns the pong with a ping!"
+    playerOnePayload: "ping!"
+    playerTwoLogMessage: "Mr. Pong returns the ping with a pong!"
+    playerTwoPayload: "pong!"
+players:
+  playerOneName: "Mr. Ping"
+  playerTwoName: "Mr. Pong"
