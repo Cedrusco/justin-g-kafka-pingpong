@@ -17,4 +17,6 @@ public class KafkaConfig {
     private String serializer;
     private String offsetReset;
     private String groupId;
+    private String pingApplicationId;
+    private String pongApplicationId;
 }

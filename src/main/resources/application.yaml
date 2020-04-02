@@ -1,7 +1,8 @@
 kafka:
   common:
     bootstrapServers: localhost:9092
-    kafkaAppId: "ping-pong"
+    pingApplicationId: "ping-app"
+    pongApplicationId: "pong-app"
     groupId: "ping-pong-group-1"
     serializer: "org.apache.kafka.common.serialization.StringSerializer"
     deserializer: "org.apache.kafka.common.serialization.StringDeserializer"

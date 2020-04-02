@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PingPongController {
 
-    @Autowired
     private ProducerService producerService;
     private BallConfig ballConfig;
     private TopicConfig topicConfig;
 
+    @Autowired
     public PingPongController(ProducerService producerService, BallConfig ballConfig, TopicConfig topicConfig) {
         this.producerService = producerService;
         this.ballConfig = ballConfig;
