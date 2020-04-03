@@ -18,10 +18,6 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class KafkaPingPong {
 
-    public static final Marker FATAL_MARKER = MarkerFactory.getMarker("FATAL");
-    @Autowired
-    public ProducerService producerService;
-
     public static void main(String[] args) {
 
         SpringApplication.run(KafkaPingPong.class, args);

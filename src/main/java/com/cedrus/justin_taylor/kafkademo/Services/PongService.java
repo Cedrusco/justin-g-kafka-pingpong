@@ -9,6 +9,9 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.ValueTransformer;
+import org.apache.kafka.streams.kstream.ValueTransformerSupplier;
+import org.apache.kafka.streams.processor.ProcessorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -42,14 +45,44 @@ public class PongService {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConfig.getOffsetReset());
 
+        String playerOnePayload = ballConfig.getPlayerOnePayload();
+
         streamsBuilder.stream(topicConfig.getPlayerOneTopic()).mapValues(
-                val ->
-                        String.valueOf(val) == String.valueOf(ballConfig.getPlayerOnePayload())
-                                ? "Missed!" : "Lost Game :(")
-                .to(topicConfig.getPlayerOneTopic());
+                val -> String.valueOf(val) == playerOnePayload
+                        ? ballConfig.getPlayerTwoPayload()
+                        : "Did not receive a " + playerOnePayload)
+                .transformValues(delayBallReturn())
+                .to(topicConfig.getPlayerTwoTopic());
         KafkaStreams streams = new KafkaStreams(streamsBuilder.build(), props);
 
         streams.start();
+    }
+
+    private ValueTransformerSupplier delayBallReturn() {
+        return () ->
+                new ValueTransformer<String, String>() {
+                    @Override
+                    public void init(ProcessorContext context) {
+                        // Necessary for the class, but not needed technically.
+                    }
+
+                    @Override
+                    public String transform(String val) {
+                        final Long timeDelayInMillis = 5000L;
+                        log.info("Starting Sleep");
+                        try {
+                            Thread.sleep(timeDelayInMillis);
+                            return val;
+                        } catch (InterruptedException ix) {
+                            log.info("Thread Interrupted");
+                        }
+                        return val;
+                    }
+
+                    @Override
+                    public void close() {
+                    }
+                };
     }
 }
 
