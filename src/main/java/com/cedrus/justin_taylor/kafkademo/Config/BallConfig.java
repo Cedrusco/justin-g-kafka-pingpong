@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "kafka.messages")
 public class BallConfig {
-    private String playerOneLogMessage;
-    private String playerOnePayload;
-    private String playerTwoLogMessage;
-    private String playerTwoPayload;
+    private String teamOneLogMessage;
+    private String teamOnePayload;
+    private String teamTwoLogMessage;
+    private String teamTwoPayload;
 }

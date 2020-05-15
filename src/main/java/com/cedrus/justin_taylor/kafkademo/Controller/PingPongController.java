@@ -1,7 +1,9 @@
 package com.cedrus.justin_taylor.kafkademo.Controller;
 
 import com.cedrus.justin_taylor.kafkademo.Config.BallConfig;
+import com.cedrus.justin_taylor.kafkademo.Config.TeamConfig;
 import com.cedrus.justin_taylor.kafkademo.Config.TopicConfig;
+import com.cedrus.justin_taylor.kafkademo.Message.PingPongMessage;
 import com.cedrus.justin_taylor.kafkademo.Services.ProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,26 +19,30 @@ public class PingPongController {
     private ProducerService producerService;
     private BallConfig ballConfig;
     private TopicConfig topicConfig;
+    private TeamConfig teamConfig;
 
     @Autowired
-    public PingPongController(ProducerService producerService, BallConfig ballConfig, TopicConfig topicConfig) {
+    public PingPongController(ProducerService producerService, BallConfig ballConfig, TopicConfig topicConfig, TeamConfig teamConfig) {
         this.producerService = producerService;
         this.ballConfig = ballConfig;
         this.topicConfig = topicConfig;
+        this.teamConfig = teamConfig;
     }
 
     @RequestMapping(value = "/ping", method = RequestMethod.POST)
     @ResponseBody
     public String sendPingMessage() {
-        producerService.sendMessage(topicConfig.getPlayerOneTopic(), ballConfig.getPlayerOnePayload());
-        return "Ping!";
+        PingPongMessage message = new PingPongMessage(teamConfig.getTeamOneName(), teamConfig.getTeamTwoName(), ballConfig.getTeamOnePayload());
+        producerService.sendMessage(topicConfig.getGameTopic(), message);
+        return "Success!";
     }
 
     @RequestMapping(value = "/pong", method = RequestMethod.POST)
     @ResponseBody
     public String sendPongMessage() {
-        producerService.sendMessage(topicConfig.getPlayerTwoTopic(), ballConfig.getPlayerTwoPayload());
-        return "Pong!";
+        PingPongMessage message = new PingPongMessage(teamConfig.getTeamTwoName(), teamConfig.getTeamOneName(), ballConfig.getTeamTwoPayload());
+        producerService.sendMessage(topicConfig.getGameTopic(), message);
+        return "Success!";
     }
 
 }

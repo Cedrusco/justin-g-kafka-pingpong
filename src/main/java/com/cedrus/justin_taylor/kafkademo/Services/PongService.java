@@ -45,25 +45,26 @@ public class PongService {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConfig.getOffsetReset());
 
-        String playerOnePayload = ballConfig.getPlayerOnePayload();
-
-        streamsBuilder.stream(topicConfig.getPlayerOneTopic()).mapValues(
-                val -> String.valueOf(val) == playerOnePayload
-                        ? ballConfig.getPlayerTwoPayload()
-                        : "Did not receive a " + playerOnePayload)
+        streamsBuilder.stream(topicConfig.getGameTopic()).mapValues(
+                val -> {
+                    if(val == ballConfig.getTeamOnePayload()) {
+                        log.info("Pong Received: "+val);
+                        return ballConfig.getTeamTwoPayload();
+                    }
+                    return "";
+                })
                 .transformValues(delayBallReturn())
-                .to(topicConfig.getPlayerTwoTopic());
+                .to(topicConfig.getGameTopic());
         KafkaStreams streams = new KafkaStreams(streamsBuilder.build(), props);
 
         streams.start();
     }
 
-    private ValueTransformerSupplier delayBallReturn() {
+    private ValueTransformerSupplier<String, String> delayBallReturn() {
         return () ->
                 new ValueTransformer<String, String>() {
                     @Override
                     public void init(ProcessorContext context) {
-                        // Necessary for the class, but not needed technically.
                     }
 
                     @Override

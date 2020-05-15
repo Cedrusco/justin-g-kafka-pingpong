@@ -11,6 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "kafka.topics")
 public class TopicConfig {
-    private String playerOneTopic;
-    private String playerTwoTopic;
+    private String gameTopic;
+
 }

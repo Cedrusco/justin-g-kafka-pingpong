@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "players")
-public class PlayerConfig {
-    private String playerOneName;
-    private String playerTwoName;
+public class TeamConfig {
+    private String teamOneName;
+    private String teamTwoName;
 }

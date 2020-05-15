@@ -8,13 +8,12 @@ kafka:
     deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
     offsetReset: "latest"
   topics:
-    playerOneTopic: "ping"
-    playerTwoTopic: "pong"
+    gameTopic: "ping_pong"
   messages:
-    playerOneLogMessage: "Mr. Ping returns the pong with a ping!"
-    playerOnePayload: "ping!"
-    playerTwoLogMessage: "Mr. Pong returns the ping with a pong!"
-    playerTwoPayload: "pong!"
-players:
-  playerOneName: "Mr. Ping"
-  playerTwoName: "Mr. Pong"
+    teamOneLogMessage: "Mr. Ping returns the pong with a ping!"
+    teamOnePayload: "ping!"
+    teamTwoLogMessage: "Mr. Pong returns the ping with a pong!"
+    teamTwoPayload: "pong!"
+teams:
+  teamOne: "Ping"
+  teamTwo: "Pong"

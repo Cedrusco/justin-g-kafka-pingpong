@@ -44,18 +44,16 @@ public class PingService {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConfig.getOffsetReset());
 
-        final String playerTwoPayload = ballConfig.getPlayerTwoPayload();
-        final String playerOnePayload = ballConfig.getPlayerOnePayload();
-        final String playerOneTopic = topicConfig.getPlayerOneTopic();
-        final String playerTwoTopic = topicConfig.getPlayerTwoTopic();
+        final String teamOnePayload = ballConfig.getTeamOnePayload();
+        final String gameTopic = topicConfig.getGameTopic();
 
-        streamsBuilder.stream(playerTwoTopic)
-                .mapValues(val ->
-                        String.valueOf(val) == playerTwoPayload
-                                ? playerOnePayload
-                                : "Did not receive a " + playerTwoPayload)
+        streamsBuilder.stream(gameTopic)
+                .mapValues(val -> {
+                    log.info("Ping val: " + val);
+                    return teamOnePayload;
+                })
                 .transformValues(delayBallReturn())
-                .to((playerOneTopic));
+                .to((gameTopic));
         KafkaStreams streams = new KafkaStreams(streamsBuilder.build(), props);
 
         streams.start();
@@ -66,7 +64,6 @@ public class PingService {
                 new ValueTransformer<String, String>() {
                     @Override
                     public void init(ProcessorContext context) {
-                        // Necessary for the class, but not needed technically.
                     }
 
                     @Override
